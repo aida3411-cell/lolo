@@ -62,6 +62,24 @@
       main { padding: 44px 22px; border-radius: 22px; }
       button { width: 100%; }
     }
+
+    /* 추가: 세탁 기호 사전 화면 */
+    body.dictionary-open { align-items: flex-start; }
+    .secondary-button { margin-top: 12px; background: #e9f2ff; color: #185c9f; }
+    .secondary-button:hover { background: #d6e9ff; }
+    #dictionaryPage { display: none; max-width: 820px; padding: 30px 24px; text-align: left; }
+    #dictionaryPage h2 { margin: 0 0 10px; font-size: clamp(24px, 5vw, 32px); }
+    #dictionaryPage .intro { margin: 0 0 22px; font-size: 15px; }
+    .symbol-section { margin: 24px 0; }
+    .symbol-section h3 { margin: 0 0 12px; color: #185c9f; font-size: 20px; }
+    .symbol-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+    .symbol-card { display: flex; gap: 12px; align-items: flex-start; padding: 14px; border: 1px solid #dae5ef; border-radius: 14px; background: #f8fbff; }
+    .symbol-card svg { width: 66px; height: 66px; flex: 0 0 66px; color: #18324a; }
+    .symbol-card strong { display: block; margin-bottom: 5px; font-size: 15px; }
+    .symbol-card small { display: block; color: #52677a; font-size: 13px; line-height: 1.5; }
+    .symbol-card small + small { margin-top: 5px; }
+    #backButton { display: block; margin: 24px auto 0; }
+    @media (max-width: 420px) { #dictionaryPage { padding: 26px 18px; } }
   </style>
 </head>
 <body>
@@ -69,10 +87,75 @@
     <h1>섬유와 세탁기호에 따라 세탁하기</h1>
     <p>섬유의 특성과 세탁기호를 알아보고, 올바른 세탁 방법을 배워보세요!</p>
     <button type="button" id="startButton">시작</button>
+    <button type="button" id="dictionaryButton" class="secondary-button">세탁 기호 사전</button>
+  </main>
+  <main id="dictionaryPage" aria-label="세탁 기호 사전">
+    <h2>세탁 기호 사전</h2>
+    <p class="intro">옷의 관리 라벨에 표시된 기호의 뜻과 주의사항을 알아보세요.</p>
+    <div id="symbolDictionary"></div>
+    <button type="button" id="backButton">첫 화면으로</button>
   </main>
   <script>
     document.getElementById('startButton').addEventListener('click', function () {
       alert('준비 중');
+    });
+
+
+    // 추가: SVG 기호 15개와 설명. 각 기호의 뜻·주의는 한 줄씩 표시합니다.
+    const wash = '<path d="M9 20 L14 49 Q32 55 50 49 L55 20 Q44 26 32 20 Q20 14 9 20 Z"/>';
+    const triangle = '<path d="M32 10 L57 53 H7 Z"/>';
+    const square = '<rect x="10" y="10" width="44" height="44"/>';
+    const iron = '<path d="M10 45 L54 45 L48 31 Q46 23 35 23 H19 L16 16 H37 Q47 16 50 26 L58 51 H10 Z"/>';
+    const circle = '<circle cx="32" cy="32" r="23"/>';
+    const cross = '<path d="M8 8 L56 56 M56 8 L8 56"/>';
+    const dot = (x, y) => `<circle cx="${x}" cy="${y}" r="2.6" fill="currentColor" stroke="none"/>`;
+    const txt = (value, y=39) => `<text x="32" y="${y}" text-anchor="middle" font-size="19" font-weight="700" fill="currentColor" stroke="none">${value}</text>`;
+    const symbols = [
+      { category:'물세탁', items:[
+        ['30℃ 물세탁', wash + txt('30',40), '뜻: 최대 30℃ 물로 세탁할 수 있어요.', '주의: 30℃를 넘는 뜨거운 물은 피하세요.'],
+        ['약한 물세탁', wash + txt('30',40) + '<path d="M17 59 H47"/>', '뜻: 30℃에서 약한 세탁 코스를 사용해요.', '주의: 강한 탈수와 마찰을 줄이세요.'],
+        ['물세탁 금지', wash + cross, '뜻: 가정에서 물로 세탁하면 안 돼요.', '주의: 별도 전문 관리 방법을 확인하세요.']
+      ]},
+      { category:'표백', items:[
+        ['표백 가능', triangle, '뜻: 염소계·산소계 표백제를 사용할 수 있어요.', '주의: 제품 사용량과 섬유 상태를 확인하세요.'],
+        ['산소계 표백만', triangle + '<path d="M11 47 L20 32 M18 53 L30 32"/>', '뜻: 산소계(비염소계) 표백제만 가능해요.', '주의: 염소계 표백제는 사용하지 마세요.'],
+        ['표백 금지', triangle + cross, '뜻: 어떤 표백제도 사용할 수 없어요.', '주의: 표백 성분이 든 세제도 피하세요.']
+      ]},
+      { category:'건조', items:[
+        ['저온 기계건조', square + '<circle cx="32" cy="32" r="17"/>' + dot(32,32), '뜻: 저온으로 기계건조할 수 있어요.', '주의: 고온 건조는 수축을 유발할 수 있어요.'],
+        ['기계건조 금지', square + '<circle cx="32" cy="32" r="17"/>' + cross, '뜻: 회전식 건조기를 사용하면 안 돼요.', '주의: 자연건조 방법을 따로 확인하세요.'],
+        ['평평하게 건조', square + '<path d="M16 32 H48"/>', '뜻: 옷을 평평하게 뉘어서 말려요.', '주의: 걸어서 말리면 형태가 늘어날 수 있어요.']
+      ]},
+      { category:'다림질', items:[
+        ['저온 다림질', iron + dot(33,37), '뜻: 다리미 바닥 온도 최대 110℃예요.', '주의: 스팀을 사용하지 마세요.'],
+        ['중온 다림질', iron + dot(28,37) + dot(38,37), '뜻: 다리미 바닥 온도 최대 150℃예요.', '주의: 높은 온도로 오래 누르지 마세요.'],
+        ['다림질 금지', iron + cross, '뜻: 다리미로 다리면 안 돼요.', '주의: 열로 섬유가 손상될 수 있어요.']
+      ]},
+      { category:'드라이클리닝', items:[
+        ['P 드라이클리닝', circle + txt('P'), '뜻: 전문업체에서 지정된 용제로 드라이클리닝할 수 있어요.', '주의: 집에서 임의로 용제를 사용하지 마세요.'],
+        ['F 드라이클리닝', circle + txt('F'), '뜻: 전문업체에서 탄화수소계 용제로 세탁할 수 있어요.', '주의: 세탁소에 라벨을 보여주세요.'],
+        ['드라이클리닝 금지', circle + cross, '뜻: 드라이클리닝을 하면 안 돼요.', '주의: 허용된 다른 관리 방법을 확인하세요.']
+      ]}
+    ];
+    const svg = (drawing, label) => `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${label}" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${drawing}</svg>`;
+    document.getElementById('symbolDictionary').innerHTML = symbols.map(section => `
+      <section class="symbol-section"><h3>${section.category}</h3><div class="symbol-grid">
+        ${section.items.map(([name, drawing, meaning, caution]) => `
+          <article class="symbol-card">${svg(drawing, name)}<div><strong>${name}</strong><small>${meaning}</small><small>${caution}</small></div></article>
+        `).join('')}
+      </div></section>
+    `).join('');
+    document.getElementById('dictionaryButton').addEventListener('click', function () {
+      document.querySelector('main:not(#dictionaryPage)').style.display = 'none';
+      document.getElementById('dictionaryPage').style.display = 'block';
+      document.body.classList.add('dictionary-open');
+      window.scrollTo(0, 0);
+    });
+    document.getElementById('backButton').addEventListener('click', function () {
+      document.getElementById('dictionaryPage').style.display = 'none';
+      document.body.classList.remove('dictionary-open');
+      document.querySelector('main:not(#dictionaryPage)').style.display = '';
+      window.scrollTo(0, 0);
     });
   </script>
 </body>
