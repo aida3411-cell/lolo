@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>섬유와 세탁기호에 따라 세탁하기</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+      background: linear-gradient(145deg, #e8f7ff 0%, #f2f5ff 55%, #e8fff5 100%);
+      color: #18324a;
+    }
+    main {
+      width: 100%;
+      max-width: 520px;
+      padding: clamp(36px, 8vw, 64px) 24px;
+      border-radius: 28px;
+      background: #ffffff;
+      box-shadow: 0 18px 52px rgba(44, 85, 118, 0.12);
+      text-align: center;
+    }
+    h1 {
+      margin: 0 0 20px;
+      font-size: clamp(27px, 5.8vw, 38px);
+      line-height: 1.35;
+      letter-spacing: -0.06em;
+      word-break: keep-all;
+    }
+    p {
+      margin: 0 0 36px;
+      font-size: clamp(15px, 3.8vw, 18px);
+      line-height: 1.8;
+      color: #52677a;
+      word-break: keep-all;
+    }
+    button {
+      width: min(100%, 280px);
+      min-height: 58px;
+      padding: 14px 24px;
+      border: 0;
+      border-radius: 16px;
+      background: #2479d8;
+      color: white;
+      font: inherit;
+      font-size: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    button:hover { background: #1764b9; }
+    button:active { transform: scale(0.98); }
+    button:focus-visible { outline: 3px solid #ffbc48; outline-offset: 4px; }
+    @media (max-width: 420px) {
+      main { padding: 44px 22px; border-radius: 22px; }
+      button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>섬유와 세탁기호에 따라 세탁하기</h1>
+    <p>섬유의 특성과 세탁기호를 알아보고, 올바른 세탁 방법을 배워보세요!</p>
+    <button type="button" id="startButton">시작</button>
+  </main>
+  <script>
+    document.getElementById('startButton').addEventListener('click', function () {
+      alert('준비 중');
+    });
+  </script>
+</body>
+</html>
